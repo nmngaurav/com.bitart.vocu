@@ -1,0 +1,31 @@
+# Xcode / Swift
+DerivedData/
+DerivedDataBuild/
+build/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+xcuserdata/
+
+# SPM
+.swiftpm/configuration/
+
+# macOS
+.DS_Store
+
+# CocoaPods (if added later)
+Pods/
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Ruby / Bundler
+vendor/bundle/
+
+# Env / secrets
+.env
+*.p12
+*.mobileprovision
