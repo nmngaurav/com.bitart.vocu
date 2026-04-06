@@ -64,6 +64,7 @@ struct RevealableCardView: View {
     let card: ReviewQueueCard
     let isRevealed: Bool
     let viewport: CGSize
+    var isDemo: Bool = false
     let onToggleReveal: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -129,6 +130,7 @@ struct RevealableCardView: View {
     }
 
     private func scheduleSwipeToRateHintIfNeeded() {
+        guard !isDemo else { return }
         guard !UserDefaults.standard.bool(forKey: RevealableCardHintKeys.swipeToRateHintShown) else { return }
         if reduceMotion {
             showSwipeToRateHint = true

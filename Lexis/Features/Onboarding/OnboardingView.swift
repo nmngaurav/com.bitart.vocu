@@ -819,6 +819,7 @@ struct OnboardingDemoCard: View {
                     card: demoCard,
                     isRevealed: showBack,
                     viewport: viewport,
+                    isDemo: true,
                     onToggleReveal: onToggleContext
                 )
                 .id(showBack) // forces refresh or flip if needed

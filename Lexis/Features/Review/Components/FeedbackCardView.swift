@@ -10,7 +10,6 @@ struct FeedbackCardView: View {
     let onBack: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var termVisible = false
     @State private var optionsVisible = false
     @State private var showEdgeHint = false
     @State private var edgeHintOpacity: Double = 0
@@ -32,36 +31,35 @@ struct FeedbackCardView: View {
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
 
-                VStack(spacing: Spacing.sm) {
-                    Text(card.word.term)
-                        .font(.system(size: 38, weight: .black, design: .rounded))
-                        .foregroundColor(.moonPearl)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.65)
-                        .padding(.horizontal, Spacing.lg)
-
-                    Text("Rate your recall")
-                        .font(.lexisCaption)
-                        .foregroundColor(.textTertiary)
-                }
-                .opacity(termVisible ? 1 : 0)
-                .scaleEffect(termVisible ? 1 : 0.92)
-
-                Spacer(minLength: 0)
-
-                VStack(spacing: Spacing.lg) {
+                VStack(spacing: Spacing.xl) {
                     Text("How well did you know this?")
-                        .font(.lexisH3)
-                        .foregroundColor(.textSecondary)
+                        .font(.lexisH2)
+                        .foregroundColor(.moonPearl)
                         .multilineTextAlignment(.center)
 
                     ratingOptions
-                        .padding(.horizontal, Spacing.xl)
                 }
+                .padding(.vertical, Spacing.xxl)
+                .padding(.horizontal, Spacing.xl)
+                .background(.regularMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 32, style: .continuous)
+                        .stroke(
+                            LinearGradient(
+                                colors: [Color.white.opacity(0.2), Color.white.opacity(0.05)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 1
+                        )
+                )
+                .shadow(color: Color.black.opacity(0.25), radius: 30, x: 0, y: 15)
+                .padding(.horizontal, Spacing.lg)
                 .opacity(optionsVisible ? 1 : 0)
-                .offset(y: optionsVisible ? 0 : 12)
-                .padding(.bottom, Spacing.huge)
+                .offset(y: optionsVisible ? 0 : 16)
+
+                Spacer(minLength: 0)
             }
 
             if showEdgeHint {
@@ -94,13 +92,9 @@ struct FeedbackCardView: View {
         }
         .onAppear {
             if reduceMotion {
-                termVisible = true
                 optionsVisible = true
             } else {
-                withAnimation(.spring(response: 0.5, dampingFraction: 0.84)) {
-                    termVisible = true
-                }
-                withAnimation(.spring(response: 0.5, dampingFraction: 0.86).delay(0.1)) {
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.86).delay(0.05)) {
                     optionsVisible = true
                 }
             }
@@ -168,10 +162,17 @@ private struct RatingOptionButton: View {
             HStack(spacing: Spacing.md) {
                 ZStack {
                     Circle()
-                        .fill(rating.accentColor.opacity(0.18))
-                        .frame(width: 46, height: 46)
+                        .fill(
+                            RadialGradient(
+                                colors: [rating.accentColor.opacity(0.28), rating.accentColor.opacity(0.05)],
+                                center: .center,
+                                startRadius: 0,
+                                endRadius: 26
+                            )
+                        )
+                        .frame(width: 48, height: 48)
                     Image(systemName: rating.iconName)
-                        .font(.system(size: 20, weight: .semibold))
+                        .font(.system(size: 22, weight: .semibold))
                         .foregroundColor(rating.accentColor)
                 }
 
@@ -189,21 +190,20 @@ private struct RatingOptionButton: View {
             .padding(.horizontal, Spacing.lg)
             .padding(.vertical, Spacing.md)
             .frame(maxWidth: .infinity, minHeight: 66)
-            .background(
-                RoundedRectangle(cornerRadius: Radius.lg, style: .continuous)
-                    .fill(Color.surfaceCard.opacity(0.45))
-            )
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: Radius.lg, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: Radius.lg, style: .continuous)
                     .stroke(
                         LinearGradient(
-                            colors: [rating.accentColor.opacity(0.45), rating.accentColor.opacity(0.1)],
+                            colors: [rating.accentColor.opacity(0.65), rating.accentColor.opacity(0.18)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
-                        lineWidth: 1
+                        lineWidth: 1.5
                     )
             )
+            .shadow(color: rating.accentColor.opacity(0.14), radius: 16, y: 8)
         }
         .buttonStyle(FeedbackPressStyle())
     }
@@ -212,7 +212,7 @@ private struct RatingOptionButton: View {
 private struct FeedbackPressStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
-            .animation(.spring(response: 0.22, dampingFraction: 0.72), value: configuration.isPressed)
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
+            .animation(.spring(response: 0.18, dampingFraction: 0.65), value: configuration.isPressed)
     }
 }
